@@ -26,4 +26,4 @@ Fluent and easy-to-use chatbot web app. Built with streamlit and Openai.
 
 [^hyp]: Up to today, supported hyperparameters includes `temperature` and `top_p`
 [^security]: This app does not store or upload user messages by any means on purpose. Cookies are stored only on your local device.
-[^duration]: The current expiring duration is set to **24 Hours**. You can modify it in `pages/Profiles.py`
+[^duration]: The current expiring duration is set to **5 days**. You can modify it in `config.yaml`
