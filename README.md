@@ -1,9 +1,13 @@
 # streamlit-openai-chatbot
-Fluent and easy-to-use chatbot web app. Built with streamlit and Openai.
+Fluent and easy-to-use chatbot web app. Built with [Streamlit](https://docs.streamlit.io/), [Extra-Streamlit-Components](https://pypi.org/project/extra-streamlit-components/) and [Openai](https://pypi.org/project/openai/).
+## Update
+* Aug 12, 2023: *added masked input field for api token, configurable expire date for cookies*
 
 ## Quick Start
-1. configure api token and other auth info
-2. enjoy chatting
+1. clone this repo, install dependencies with `pip install -r requiremnents.txt`
+2. execute `streamlit run Chat.py`
+3. configure api token and other auth info
+4. enjoy chatting
 
 ## Features
 * fully implemeted chatting history
