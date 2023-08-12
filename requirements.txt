@@ -2,4 +2,4 @@ openai
 streamlit
 extra-streamlit-components
 pyyaml
-python>=3.11
+python_version>=3.11
