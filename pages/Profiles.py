@@ -1,11 +1,15 @@
 import datetime
 import streamlit as st
+import yaml
 
 st.set_page_config(
     page_title="信息配置",
     page_icon="📝"
 )
 
+with open("./config.yaml", "r") as f:
+    configs = yaml.load(f, Loader=yaml.FullLoader)
+COOKIES_EXPIRE_DAYS = configs['cookies_expire_days']
 
 def main():
     st.header("📝信息配置")
@@ -17,7 +21,7 @@ def main():
             api_type = st.text_input("api type").strip()
             api_base = st.text_input("api base").strip()
             api_version = st.text_input("api version").strip()
-            api_key = st.text_input("api key").strip()
+            api_key = st.text_input("api key", type="password").strip()
 
             added = st.form_submit_button("Add")
             if added:
@@ -35,7 +39,11 @@ def main():
             with st.expander(name):
                 text_fields = {}
                 for k, v in auth.items():
-                    text_fields[k] = st.text_input(k, v, key=f'{k} in {name}') # avoid same value conflicts(streamlit don't allow different elements have same key)
+                    if k == "api_key":
+                        type = "password"
+                    else:
+                        type = "default"
+                    text_fields[k] = st.text_input(k, v, key=f'{k} in {name}', type=type) # avoid same value conflicts(streamlit don't allow different elements have same key)
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     if name == st.session_state['current_profile']:
@@ -55,7 +63,7 @@ def main():
                 if btn_del:
                     del st.session_state['profiles'][name]
                     st.session_state['current_profile'] = ''
-                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1)) 
+                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=COOKIES_EXPIRE_DAYS)) 
                     break
                     # st.experimental_rerun()
                 if btn_update:
