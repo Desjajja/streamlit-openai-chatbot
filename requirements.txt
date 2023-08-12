@@ -1,5 +1,5 @@
 openai
 streamlit
 extra-streamlit-components
-pyyaml
+PyYAML
 python_version>=3.11
