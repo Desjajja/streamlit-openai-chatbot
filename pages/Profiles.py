@@ -1,4 +1,6 @@
+import datetime
 import streamlit as st
+
 st.set_page_config(
     page_title="信息配置",
     page_icon="📝"
@@ -26,14 +28,14 @@ def main():
                             api_version=api_version,
                             api_key=api_key
                         )
-
+                cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1))
                 st.success(f"profile {name} added!")
     with col2:
-        for name, auth in st.session_state['profiles'].items():
+        for name, auth in sorted(st.session_state['profiles'].copy().items()): # avoid runtimeError: change dictionary while iterating it
             with st.expander(name):
                 text_fields = {}
                 for k, v in auth.items():
-                    text_fields[k] = st.text_input(k, v)
+                    text_fields[k] = st.text_input(k, v, key=f'{k} in {name}') # avoid same value conflicts(streamlit don't allow different elements have same key)
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     if name == st.session_state['current_profile']:
@@ -44,22 +46,34 @@ def main():
                         disabled = False
                     btn_select = st.button(label=select_state, key=f"{name}_select", disabled=disabled)
                 with col2:
-                    btn_del = st.button(label="delete", key=f"{name}_delete")
-                with col3:
                     btn_update = st.button(label="update", key=f"{name}_update")
+                with col3:
+                    btn_del = st.button(label="delete", key=f"{name}_delete")
                 if btn_select:
                     st.session_state['current_profile'] = name
                     st.experimental_rerun()
                 if btn_del:
                     del st.session_state['profiles'][name]
                     st.session_state['current_profile'] = ''
-                    st.experimental_rerun()
+                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1)) 
+                    break
+                    # st.experimental_rerun()
                 if btn_update:
                     st.session_state['profiles'][name] = text_fields
+                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1))
+
 
 if __name__ == "__main__":
-    if not st.session_state.get('profiles'):
+    try:
+        cookie_manager = st.session_state['cookie_manager']
+    except:
+        st.warning("Cookies failed to initialize, try switching between pages")
+        st.stop()
+
+    if not (profiles_cookies := cookie_manager.get(cookie='profiles')):
         st.session_state['profiles'] = {}
+    else:
+        st.session_state['profiles'] = profiles_cookies
     if not st.session_state.get('current_profile'):
         st.session_state['current_profile'] = ''
     main()

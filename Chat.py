@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import openai
+import extra_streamlit_components as stx
 
 st.set_page_config(
     page_title="究极神奇海螺",
@@ -33,6 +34,8 @@ def gpt_chat_stream(messages, hyparams, auth):
                                         stop=None,
                                         stream=True, **auth, **hyparams)
 
+def get_manager():
+    return stx.CookieManager()
 
 def main():
     current_profile = st.session_state.get('current_profile')
@@ -74,4 +77,5 @@ def main():
 
 
 if __name__ == "__main__":
+    st.session_state['cookie_manager'] = get_manager()
     main()
