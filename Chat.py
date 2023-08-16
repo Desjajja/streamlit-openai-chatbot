@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import openai
 import extra_streamlit_components as stx
+# import datetime
 
 st.set_page_config(
     page_title="究极神奇海螺",
@@ -27,6 +28,39 @@ def clear_chat_history():
     del st.session_state.messages
 
 
+def init_chat_dict():
+    if "message_dict" in st.session_state:
+        message_dict = st.session_state.message_dict
+        with st.sidebar:
+            for tag in message_dict:
+                st.button(
+                    label=str(tag),
+                    key=tag,
+                    on_click=select_chat,
+                    args=(tag,) # must be a tuple
+                )
+    else:
+        st.session_state.message_dict = {}
+
+def init_upload():
+    with st.sidebar:
+        with st.form("my-form", clear_on_submit=True):
+            file = st.file_uploader("FILE UPLOADER")
+            submitted = st.form_submit_button("UPLOAD!")
+            if submitted and file is not None:
+                uploaded_list = json.load(file)
+                st.session_state.message_dict[str(hash(str(uploaded_list)))] = uploaded_list
+                st.experimental_rerun()
+
+def select_chat(tag):
+    new_chat()
+    st.session_state.messages = st.session_state.message_dict[tag]
+
+def new_chat():
+    if messages := st.session_state.messages:
+        st.session_state.message_dict[str(hash(str(messages)))] = messages
+        st.session_state.messages = []
+
 def gpt_chat_stream(messages, hyparams, auth):
     return openai.ChatCompletion.create(messages=messages,
                                         frequency_penalty=0,
@@ -40,6 +74,7 @@ def get_manager():
 def main():
     current_profile = st.session_state.get('current_profile')
     st.header("🐚究极神奇海螺")
+
     if not current_profile:
         st.markdown("No profile is selected.")
         return
@@ -58,9 +93,7 @@ def main():
         with st.chat_message("user", avatar='🧑‍💻'):
             st.markdown(prompt)
         messages.append({"role": "user", "content": prompt})
-        # print(f"[user] {prompt}", flush=True)
         report = []
-        # print(hyparams)
         with st.chat_message("assistant", avatar='🤖'):
             placeholder = st.empty()
             for response in gpt_chat_stream(messages, hyparams, auth):
@@ -71,10 +104,26 @@ def main():
             role="assistant",
             content=result
         ))
-        # print(json.dumps(messages, ensure_ascii=False), flush=True)
 
-    st.button("清空对话", on_click=clear_chat_history)
+    init_chat_dict()
+    init_upload()
 
+    col1, col2= st.columns(2)
+    @st.cache_data
+    def dump_message(m):
+        return json.dumps(m, ensure_ascii=False)
+    
+    data = dump_message(messages)
+    with col1:
+        # st.button("Clear chat", on_click=clear_chat_history)
+        st.button("New chat", on_click=new_chat)
+    with col2:
+        st.download_button(
+            label="Download chat",
+            data=data,
+            file_name='chat_histoy.json',
+            mime="text/plain"
+        )       
 
 if __name__ == "__main__":
     st.session_state['cookie_manager'] = get_manager()
