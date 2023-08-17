@@ -63,7 +63,7 @@ def init_chat_dict():
 def init_upload():
     with st.sidebar:
         with st.form("my-form", clear_on_submit=True):
-            file = st.file_uploader("FILE UPLOADER")
+            file = st.file_uploader("UPLOAD CHAT HISTORY")
             submitted = st.form_submit_button("UPLOAD!")
             if submitted and file is not None:
                 uploaded_list = json.load(file)
@@ -90,7 +90,7 @@ def new_chat():
         conclusion_enquiry.append(
             dict(
             role="user",
-            content="give the conversation a title based on the context:")
+            content="an abstract within 10 words of this conversation:")
             )
         # print(conclusion_enquiry)
         conclusion = gpt_chat(conclusion_enquiry
