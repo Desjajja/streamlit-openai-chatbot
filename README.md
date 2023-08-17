@@ -1,6 +1,7 @@
 # streamlit-openai-chatbot
 Fluent and easy-to-use chatbot web app. Built with [Streamlit](https://docs.streamlit.io/), [Extra-Streamlit-Components](https://pypi.org/project/extra-streamlit-components/) and [Openai](https://pypi.org/project/openai/).
 ## Update
+* Aug 17, 2023: _implemented mutiple chat messages management, including switching, downloading and deletion_
 * Aug 12, 2023: *added masked input field for api token, configurable expire date for cookies*
 
 ## Quick Start
@@ -17,8 +18,8 @@ Fluent and easy-to-use chatbot web app. Built with [Streamlit](https://docs.stre
 
 ## Screenshots
 * Chat page
-![image](https://github.com/Desjajja/streamlit-openai-chatbot/assets/58029489/b1d50710-7c3d-4662-99fa-5f89082cf85c)
-* configuring hyperparameters
+![image](https://github.com/Desjajja/streamlit-openai-chatbot/assets/58029489/2a45068e-dd54-4789-8075-25e1b07161cd)
+* configuring hyperparameters[^conf_hyp]
 ![image](https://github.com/Desjajja/streamlit-openai-chatbot/assets/58029489/296a2cd9-ef94-44a9-98af-408397bc68e8)
 * configuring profiles
 <img width="960" alt="Profiles" src="https://github.com/Desjajja/streamlit-openai-chatbot/assets/58029489/60d47ba5-235c-4a7d-899c-a0599bd99822">
@@ -29,5 +30,6 @@ Fluent and easy-to-use chatbot web app. Built with [Streamlit](https://docs.stre
 2. Profiles stored in cookies will be initialized only after `Chat` page is opened for once.
 
 [^hyp]: Up to today, supported hyperparameters includes `temperature` and `top_p`
+[^conf_hyp]: Screenshot was taken before 8.17 update, hence no multiple chat management shown in the sidebar
 [^security]: This app does not store or upload user messages by any means on purpose. Cookies are stored only on your local device.
 [^duration]: The current expiring duration is set to **5 days**. You can modify it in `config.yaml`
