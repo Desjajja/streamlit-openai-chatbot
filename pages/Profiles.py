@@ -68,7 +68,7 @@ def main():
                     # st.experimental_rerun()
                 if btn_update:
                     st.session_state['profiles'][name] = text_fields
-                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1))
+                    cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=COOKIES_EXPIRE_DAYS))
 
 
 if __name__ == "__main__":
