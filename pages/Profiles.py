@@ -32,7 +32,7 @@ def main():
                             api_version=api_version,
                             api_key=api_key
                         )
-                cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=1))
+                cookie_manager.set('profiles', st.session_state['profiles'], expires_at=datetime.datetime.today() + datetime.timedelta(days=COOKIES_EXPIRE_DAYS))
                 st.success(f"profile {name} added!")
     with col2:
         for name, auth in sorted(st.session_state['profiles'].copy().items()): # avoid runtimeError: change dictionary while iterating it
